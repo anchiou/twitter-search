@@ -1,0 +1,13 @@
+# FOR IDEA
+*.iml
+*/*.iml
+*/*/*.iml
+*/*/*/*.iml
+
+.idea/*
+
+# FOR MAVEN
+target
+*/target
+*/*/target
+*/*/*/target
