@@ -1,14 +1,10 @@
-# FOR IDEA
+# IDEA
 *.iml
 */*.iml
 */*/*.iml
 */*/*/*.iml
 Project
-
 .idea/*
 
-# FOR MAVEN
-target
-*/target
-*/*/target
-*/*/*/target
+# Maven
+**/target
