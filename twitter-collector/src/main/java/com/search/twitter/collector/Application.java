@@ -1,12 +1,20 @@
-package com.twitter.search.collector;
+package com.search.twitter.collector;
 
 import twitter4j.*;
 
+import java.nio.file.Path;
+
 public class Application {
     public static void main(String[] args) throws TwitterException {
+//        FileService fileService = new FileService();
+//
+//        String fileName;
+//        Path path;
+
         TwitterStream twitterStream = new TwitterStreamFactory().getInstance().addListener(new StatusListener() {
             public void onStatus(Status status) {
-                System.out.println("@" + status.getUser().getScreenName() + " - " + status.getText());
+//                System.out.println("@" + status.getUser().getScreenName() + " - " +
+//                System.out.println("---------------------" + status.toString());
             }
 
             public void onDeletionNotice(StatusDeletionNotice statusDeletionNotice) {
@@ -28,6 +36,18 @@ public class Application {
             public void onException(Exception ex) {
                 ex.printStackTrace();
             }
-        }).sample();
+        });
+
+//        for (int i = 1; i <= 5; ++i) {
+//            fileName = "tweets" + i + ".txt";
+//            path = fileService.getPath(fileName);
+//            try {
+//                Files.write(path, );
+//            } catch (IOException e) {
+//                System.out.println("FileService.writeToFile: Could not create output file.");
+//            }
+//        }
+
+        twitterStream.sample();
     }
 }
