@@ -12,14 +12,23 @@ public class FileService {
 
     FileService() {
         fileCount = 0;
-    };
+    }
+
+    public File newFile(String fileName) {
+        String path = Paths.get(System.getProperty("user.home"), "twitter-search", fileName).toString();
+        File file = new File(path);
+        try {
+            file.createNewFile();
+        } catch (IOException ioe) {}
+        return file;
+    }
 
     /**
      *
      * @return Next file to write to
      */
-    public File nextFile() {
-        String fileName = "tweets" + ++fileCount + ".txt";
+    public File nextFile(String filePrefix) {
+        String fileName = filePrefix + ++fileCount + ".txt";
         String path = Paths.get(System.getProperty("user.home"), "twitter-search", fileName).toString();
         File file = new File(path);
         try {
