@@ -8,7 +8,7 @@ public class Application {
         FileService fileService = new FileService();
 
         TwitterStream twitterStream = new TwitterStreamFactory().getInstance().addListener(new StatusListener() {
-            File outputFile = fileService.nextFile();
+            File outputFile = fileService.nextFile("tweets");
 
             public void onStatus(Status status) {
                 if (fileService.checkSize(outputFile)) {
@@ -21,7 +21,7 @@ public class Application {
                         System.out.println("Failed to store tweets: " + ioe.getMessage());
                     }
                 } else {
-                    outputFile = fileService.nextFile();
+                    outputFile = fileService.nextFile("tweets");
                 }
 
             }
