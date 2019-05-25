@@ -1,13 +1,16 @@
 package com.search.twitter.collector;
 
 import java.io.*;
+
 import twitter4j.*;
 
 public class Application {
     public static void main(String[] args) throws TwitterException {
         FileService fileService = new FileService();
+        DataService dataService = new DataService();
 
-        TwitterStream twitterStream = new TwitterStreamFactory().getInstance().addListener(new StatusListener() {
+        TwitterStream twitterStream = new TwitterStreamFactory().getInstance();
+        StatusListener statusListener = new StatusListener() {
             File outputFile = fileService.nextFile("tweets");
 
             public void onStatus(Status status) {
@@ -20,25 +23,40 @@ public class Application {
                         ioe.printStackTrace();
                         System.out.println("Failed to store tweets: " + ioe.getMessage());
                     }
+                } else if (fileService.getFileCount() >= 5) { // Each file is ~1GB, so 5 files == 5GB
+                    for (String file : fileService.getCreatedFiles()) {
+                        try {
+                            dataService.extractTitles(file);
+                        } catch (IOException e) {
+                            System.out.println(file + ": could not extract titles from file");
+                        }
+                    }
+                    twitterStream.cleanUp();
+                    twitterStream.shutdown();
                 } else {
                     outputFile = fileService.nextFile("tweets");
                 }
 
             }
 
-            public void onDeletionNotice(StatusDeletionNotice statusDeletionNotice) {}
+            public void onDeletionNotice(StatusDeletionNotice statusDeletionNotice) {
+            }
 
-            public void onTrackLimitationNotice(int numberOfLimitedStatuses) {}
+            public void onTrackLimitationNotice(int numberOfLimitedStatuses) {
+            }
 
-            public void onScrubGeo(long userId, long upToStatusId) {}
+            public void onScrubGeo(long userId, long upToStatusId) {
+            }
 
-            public void onStallWarning(StallWarning warning) {}
+            public void onStallWarning(StallWarning warning) {
+            }
 
             public void onException(Exception ex) {
                 ex.printStackTrace();
             }
-        });
+        };
 
+        twitterStream.addListener(statusListener);
         twitterStream.sample();
     }
 
