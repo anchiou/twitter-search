@@ -10,4 +10,4 @@ Project
 **/target
 
 # Twitter4j properties
-#twitter-collector/src/main/resources/twitter4j.properties
+**/twitter-collector/src/main/resources/twitter4j.properties
