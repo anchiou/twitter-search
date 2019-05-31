@@ -7,12 +7,12 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class LuceneDocumentService {
-
     public Document getDocument(String string) {
         Document doc = new Document();
         //Main JSON File from line
         JSONObject jsonObject = new JSONObject(string);
         //Outside fields
+
         String createdAt = jsonObject.getString("created_at");
         doc.add(new TextField("created_at", createdAt, Field.Store.YES));
 
@@ -92,6 +92,5 @@ public class LuceneDocumentService {
         doc.add(new StringField("verified", userVerified, Field.Store.YES));
 
         return doc;
-
     }
 }

@@ -26,6 +26,7 @@ public class DataService {
             try {
                 Stream<String> stream = Files.lines(path);
                 stream.forEach(line -> {
+                    String output = "";
                     //get JSON Object from stream
                     JSONObject jsonObject = new JSONObject(line);
                     JSONObject entityJsonObject = jsonObject.getJSONObject("entities");
@@ -44,19 +45,18 @@ public class DataService {
                                 try {
                                     Document doc = Jsoup.connect(url).get();
                                     String title = doc.title();
-//                                    System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! " + title);
                                     titles[i] = title;
                                 } catch (IOException e) {}
                             }
                         }
                         //Add the titles to the original JSON Object
                         jsonObject.put("titles", titles);
-                        String output = jsonObject.toString();
-
-                        try {
-                            bw.write(output);
-                        } catch (IOException e) {}
                     }
+                    output = jsonObject.toString();
+                    try {
+                        bw.write(output);
+                        bw.newLine();
+                    } catch (IOException e) {}
                 });
             } catch (IOException e) {}
             bw.flush();
