@@ -13,12 +13,12 @@ import java.util.stream.Stream;
 
 @Service
 public class LuceneDocumentService {
-
     public Document getDocument(String string) {
         Document doc = new Document();
         //Main JSON File from line
         JSONObject jsonObject = new JSONObject(string);
         //Outside fields
+
         String createdAt = jsonObject.getString("created_at");
         doc.add(new TextField("created_at", createdAt, Field.Store.YES));
         String tweetIdStr = jsonObject.getString("id_str");
@@ -65,6 +65,5 @@ public class LuceneDocumentService {
         doc.add(new IntPoint("verified", userVerified));
 
         return doc;
-
     }
 }
