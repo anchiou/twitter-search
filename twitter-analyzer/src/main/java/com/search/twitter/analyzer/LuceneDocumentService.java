@@ -1,7 +1,6 @@
 package com.search.twitter.analyzer;
 
-import org.apache.lucene.document.Document;
-import org.apache.lucene.document.TextField;
+import org.apache.lucene.document.*;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.stereotype.Service;
@@ -20,45 +19,51 @@ public class LuceneDocumentService {
         //Main JSON File from line
         JSONObject jsonObject = new JSONObject(string);
         //Outside fields
-        String created_at = jsonObject.getString("created_at");
-        doc.add(new TextField("created_at", created_at));
-        String tweet_id_str = jsonObject.getString("id_str");
-        doc.add(new TextField("id_str", tweet_id_str));
-        String tweet_text = jsonObject.getString("text");
-        doc.add(new TextField("text", tweet_text));
-        String in_reply_to_screen_name = jsonObject.optString("in_reply_to_screen_name");
-        doc.add(new TextField("in_reply_to_screen_name", in_reply_to_screen_name));
-        Integer retweet_count = jsonObject.getInt("retweet_count");
-        doc.add(new )
-        JSONObject favorite_count = jsonObject.getJSONObject("favorite_count");
-        JSONObject reply_count = jsonObject.getJSONObject("reply_count");
-        JSONObject lang = jsonObject.getJSONObject("lang");
-
+        String createdAt = jsonObject.getString("created_at");
+        doc.add(new TextField("created_at", createdAt, Field.Store.YES));
+        String tweetIdStr = jsonObject.getString("id_str");
+        doc.add(new StringField("id_str", tweetIdStr, Field.Store.YES));
+        String tweetText = jsonObject.getString("text");
+        doc.add(new TextField("text", tweetText, Field.Store.YES));
+        String inReplyToScreenName = jsonObject.optString("in_reply_to_screen_name");
+        doc.add(new StringField("in_reply_to_screen_name", inReplyToScreenName, Field.Store.YES));
+        Integer retweetCount = jsonObject.getInt("retweet_count");
+        doc.add(new IntPoint("retweet_count", retweetCount));
+        Integer favoriteCount = jsonObject.optInt("favorite_count",0);
+        doc.add(new IntPoint("favorite_count", favoriteCount));
+        Integer replyCount = jsonObject.getInt("reply_count");
+        doc.add(new IntPoint("reply_count", replyCount));
+        String lang = jsonObject.optString("lang","en");
+        doc.add(new StringField("lang", lang, Field.Store.YES));
 
         //Coordinates and Place
-        JSONObject coordinates = jsonObject.getJSONObject("coordinates");
-        JSONArray tweet_coordinates = coordinates.getJSONArray("coordinates");
-        JSONObject place = jsonObject.getJSONObject("place");
-        JSONObject tweet_country = place.getJSONObject("country");
-        JSONObject tweet_country_code = place.getJSONObject("country_code");
-        JSONObject tweet_place_full_name = place.getJSONObject("full_name");
+        JSONObject coordinates = jsonObject.optJSONObject("coordinates");
+        JSONArray tweetCoordinates = coordinates.optJSONArray("coordinates");
+        //FIXME: HOW TO STORE?
+        JSONObject place = jsonObject.optJSONObject("place");
+        String tweetCountry = place.optString("country");
+        doc.add(new StringField("country", tweetCountry, Field.Store.YES));
+        String tweetCountryCode = place.optString("country_code");
+        doc.add(new StringField("country_code", tweetCountryCode, Field.Store.YES));
+        String tweetPlaceFullName = place.optString("full_name");
+        doc.add(new TextField("full_name", tweetPlaceFullName, Field.Store.YES));
 
         //Entities
         JSONObject entities = jsonObject.getJSONObject("entities");
-        JSONArray hashtags_array = entities.optJSONArray("hashtags");
+        JSONArray hashtagsArray = entities.optJSONArray("hashtags");
         //FIXME : Extract hashtags from text field in hashtag
-        JSONArray user_mentions = entities.optJSONArray("user_mentions");
+        JSONArray userMentions = entities.optJSONArray("user_mentions");
         //FIXME : grab name and screen name from the arrays
 
         //Users
         JSONObject user = jsonObject.getJSONObject("user");
-        JSONObject user_name = user.getJSONObject("name")
-        JSONObject user_screen_name = user.getJSONObject("screen_name");
-        JSONObject user_verified = user.getJSONObject("verified");
+        String userName = user.getString("name");
+        doc.add(new StringField("user_name", userName, Field.Store.YES));
+        String userScreenName = user.getString("screen_name");
+        doc.add(new StringField("user_screen_name", userScreenName, Field.Store.YES));
+        Integer userVerified = user.getInt("verified");//Semantically it should be a bool
+        doc.add(new IntPoint("verified", userVerified));
 
-
-
-        doc.add(Field.UnStired("body", bodyText));
         return doc;
 
     }
