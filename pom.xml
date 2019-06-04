@@ -59,7 +59,7 @@
             <version>8.1.0</version>
         </dependency>
         <!-- Lucene End -->
-</dependencies>
+    </dependencies>
 
     <build>
         <plugins>
