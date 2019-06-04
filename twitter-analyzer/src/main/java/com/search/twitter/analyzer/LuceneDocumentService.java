@@ -3,7 +3,6 @@ package com.search.twitter.analyzer;
 import org.apache.lucene.document.*;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.springframework.stereotype.Service;
 
 public class LuceneDocumentService {
     public Document getDocument(String string) {

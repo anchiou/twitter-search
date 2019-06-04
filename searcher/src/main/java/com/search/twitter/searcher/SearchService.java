@@ -1,4 +1,4 @@
-package com.search.twitter.analyzer;
+package com.search.twitter.searcher;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
