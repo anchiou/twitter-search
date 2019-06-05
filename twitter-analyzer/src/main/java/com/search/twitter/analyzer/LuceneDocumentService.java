@@ -26,20 +26,20 @@ public class LuceneDocumentService {
         String inReplyToScreenName = jsonObject.optString("in_reply_to_screen_name");
         doc.add(new StringField("in_reply_to_screen_name", inReplyToScreenName, Field.Store.YES));
 
-        String replyCount = jsonObject.getString("reply_count");
-        doc.add(new StringField("reply_count", replyCount, Field.Store.YES));
+        int replyCount = jsonObject.getInt("reply_count");
+        doc.add(new StringField("reply_count", Integer.toString(replyCount), Field.Store.YES));
         //System.out.println("ret_cnt: " + replyCount.toString());
 //        doc.add(new IntPoint("reply_count", replyCount));
 //        doc.add(new StoredField("reply_count", replyCount));
 
-        String retweetCount = jsonObject.getString("retweet_count");
-        doc.add(new StringField("retweet_count", retweetCount, Field.Store.YES));
+        int retweetCount = jsonObject.getInt("retweet_count");
+        doc.add(new StringField("retweet_count", Integer.toString(retweetCount), Field.Store.YES));
 //        //System.out.println("ret_cnt: " + retweetCount.toString());
 //        doc.add(new IntPoint("retweet_count", retweetCount));
 //        doc.add(new StoredField("retweet_count", retweetCount));
 
-        String favoriteCount = jsonObject.getString("favorite_count");
-        doc.add(new StringField("favorite_count", favoriteCount, Field.Store.YES));
+        int favoriteCount = jsonObject.getInt("favorite_count");
+        doc.add(new StringField("favorite_count", Integer.toString(favoriteCount), Field.Store.YES));
 
 //        Integer favoriteCount = jsonObject.optInt("favorite_count", 0);
 //        //System.out.println("fav_cnt: " + favoriteCount.toString());
