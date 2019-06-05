@@ -26,20 +26,25 @@ public class LuceneDocumentService {
         String inReplyToScreenName = jsonObject.optString("in_reply_to_screen_name");
         doc.add(new StringField("in_reply_to_screen_name", inReplyToScreenName, Field.Store.YES));
 
-        Integer replyCount = jsonObject.getInt("reply_count");
-        System.out.println("ret_cnt: " + replyCount.toString());
-        doc.add(new IntPoint("reply_count", replyCount));
-        doc.add(new StoredField("reply_count", replyCount));
+        String replyCount = jsonObject.getString("reply_count");
+        doc.add(new StringField("reply_count", replyCount, Field.Store.YES));
+        //System.out.println("ret_cnt: " + replyCount.toString());
+//        doc.add(new IntPoint("reply_count", replyCount));
+//        doc.add(new StoredField("reply_count", replyCount));
 
-        Integer retweetCount = jsonObject.getInt("retweet_count");
-        System.out.println("ret_cnt: " + retweetCount.toString());
-        doc.add(new IntPoint("retweet_count", retweetCount));
-        doc.add(new StoredField("retweet_count", retweetCount));
+        String retweetCount = jsonObject.getString("retweet_count");
+        doc.add(new StringField("retweet_count", retweetCount, Field.Store.YES));
+//        //System.out.println("ret_cnt: " + retweetCount.toString());
+//        doc.add(new IntPoint("retweet_count", retweetCount));
+//        doc.add(new StoredField("retweet_count", retweetCount));
 
-        Integer favoriteCount = jsonObject.optInt("favorite_count", 0);
-        System.out.println("fav_cnt: " + favoriteCount.toString());
-        doc.add(new IntPoint("favorite_count", favoriteCount));
-        doc.add(new StoredField("favorite_count", favoriteCount));
+        String favoriteCount = jsonObject.getString("favorite_count");
+        doc.add(new StringField("favorite_count", favoriteCount, Field.Store.YES));
+
+//        Integer favoriteCount = jsonObject.optInt("favorite_count", 0);
+//        //System.out.println("fav_cnt: " + favoriteCount.toString());
+//        doc.add(new IntPoint("favorite_count", favoriteCount));
+//        doc.add(new StoredField("favorite_count", favoriteCount));
 
         String lang = jsonObject.optString("lang","en");
         doc.add(new StringField("lang", lang, Field.Store.YES));
