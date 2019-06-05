@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
 
 @RestController
+@CrossOrigin
 @RequestMapping("/search")
 public class SearchController {
     @Autowired
@@ -18,6 +19,7 @@ public class SearchController {
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
+    @CrossOrigin
     @PostMapping
     public ResponseEntity search(@RequestBody SearchObject data) {
         try {

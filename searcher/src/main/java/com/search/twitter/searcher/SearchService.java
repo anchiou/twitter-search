@@ -77,7 +77,6 @@ public class SearchService {
             int numTopHits = 25;
             ScoreDoc[] hits = indexSearcher.search(finalQuery, numTopHits).scoreDocs;
 
-            // FIXME: Iterate through the results
             for (int rank = 0; rank < hits.length; ++rank) {
                 Document hitDoc = indexSearcher.doc(hits[rank].doc);
                 System.out.println((rank + 1) + " (score:" + hits[rank].score + ") --> "
