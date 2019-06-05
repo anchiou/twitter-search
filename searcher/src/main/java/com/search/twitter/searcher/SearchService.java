@@ -53,26 +53,26 @@ public class SearchService {
         boosts.put(fields[7], 1.75f); // user_screen_name
 
         try {
-            Expression expr = JavascriptCompiler.compile("_score + ln(retweet_count) + ln(favorite_count) ");
-
-        SimpleBindings bindings = new SimpleBindings();
-        bindings.add(new SortField("_score", SortField.Type.SCORE));
-        bindings.add(new SortField("retweet_count", SortField.Type.INT));
-        bindings.add(new SortField("favorite_count", SortField.Type.INT));
+//            Expression expr = JavascriptCompiler.compile("_score + ln(retweet_count) + ln(favorite_count) ");
+//
+//        SimpleBindings bindings = new SimpleBindings();
+//        bindings.add(new SortField("_score", SortField.Type.SCORE));
+//        bindings.add(new SortField("retweet_count", SortField.Type.INT));
+//        bindings.add(new SortField("favorite_count", SortField.Type.INT));
 
         MultiFieldQueryParser parser = new MultiFieldQueryParser(fields, analyzer, boosts);
 
         // Queries are boosted, then filtered by language, then modified by expression
             Query boostedQuery = parser.parse(userQuery);
-            Query filteredQuery = new BooleanQuery.Builder()
-                    .add(boostedQuery, BooleanClause.Occur.MUST)
-                    .add(new TermQuery(new Term("lang", lang)), BooleanClause.Occur.FILTER)
-                    .build();
-            FunctionScoreQuery functionQuery = new FunctionScoreQuery(filteredQuery, expr.getDoubleValuesSource(bindings));
-            Query matchQuery = new TermQuery(new Term("verified", "true"));
-            Query finalQuery = functionQuery.boostByQuery(functionQuery, matchQuery, 1.1f);
-
-            System.out.println(finalQuery.toString());
+//            Query filteredQuery = new BooleanQuery.Builder()
+//                    .add(boostedQuery, BooleanClause.Occur.MUST)
+//                    .add(new TermQuery(new Term("lang", lang)), BooleanClause.Occur.FILTER)
+//                    .build();
+//            FunctionScoreQuery functionQuery = new FunctionScoreQuery(filteredQuery, expr.getDoubleValuesSource(bindings));
+//            Query matchQuery = new TermQuery(new Term("verified", "true"));
+//            Query finalQuery = functionQuery.boostByQuery(functionQuery, matchQuery, 1.1f);
+            Query finalQuery = boostedQuery;
+//            System.out.println(finalQuery.toString());
 
             int numTopHits = 25;
             ScoreDoc[] hits = indexSearcher.search(finalQuery, numTopHits).scoreDocs;
@@ -89,9 +89,10 @@ public class SearchService {
             directory.close();
         } catch (org.apache.lucene.queryparser.classic.ParseException e) {
             System.out.println("SearchService.parser.parse: ParseException");
-        } catch (ParseException e) {
-            System.out.println("SearchService.expr.compile: ParseException");
         }
+//        catch (ParseException e) {
+//            System.out.println("SearchService.expr.compile: ParseException");
+//        }
     }
 }
 
