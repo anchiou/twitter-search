@@ -83,7 +83,7 @@ public class SearchService {
                 System.out.println((rank + 1) + " (score:" + hits[rank].score + ") --> "
                         + hitDoc.get("user_name") + "/n"
                         + hitDoc.get("user_screen_name") + "/n");
-                // ystem.out.println(indexSearcher.explain(query, hits[rank].doc));
+                // System.out.println(indexSearcher.explain(query, hits[rank].doc));
             }
             indexReader.close();
             directory.close();

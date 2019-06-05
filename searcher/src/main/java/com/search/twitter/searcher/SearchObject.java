@@ -35,6 +35,6 @@ public class SearchObject {
     }
 
     public void setLang(String value) {
-        this.lang = lang;
+        this.lang = value;
     }
 }
