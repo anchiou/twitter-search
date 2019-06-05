@@ -29,7 +29,7 @@ public class LuceneDocumentService {
         Integer replyCount = jsonObject.getInt("reply_count");
         System.out.println("ret_cnt: " + replyCount.toString());
         doc.add(new IntPoint("reply_count", replyCount));
-        doc.add(new StoredField("reply_count", replyCount).setIntValue(replyCount));
+        doc.add(new StoredField("reply_count", replyCount));
 
         Integer retweetCount = jsonObject.getInt("retweet_count");
         System.out.println("ret_cnt: " + retweetCount.toString());
