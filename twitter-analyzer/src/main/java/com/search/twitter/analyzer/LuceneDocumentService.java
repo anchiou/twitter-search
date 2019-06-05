@@ -27,13 +27,13 @@ public class LuceneDocumentService {
         doc.add(new StringField("in_reply_to_screen_name", inReplyToScreenName, Field.Store.YES));
 
         Integer replyCount = jsonObject.getInt("reply_count");
-        doc.add(new IntPoint("reply_count", replyCount));
+        doc.add(new StoredField("reply_count", replyCount));
 
         Integer retweetCount = jsonObject.getInt("retweet_count");
-        doc.add(new IntPoint("retweet_count", retweetCount));
+        doc.add(new StoredField("retweet_count", retweetCount));
 
         Integer favoriteCount = jsonObject.optInt("favorite_count",0);
-        doc.add(new IntPoint("favorite_count", favoriteCount));
+        doc.add(new StoredField("favorite_count", favoriteCount));
 
         String lang = jsonObject.optString("lang","en");
         doc.add(new StringField("lang", lang, Field.Store.YES));
