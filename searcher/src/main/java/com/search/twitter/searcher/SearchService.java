@@ -25,7 +25,7 @@ import java.util.Map;
 
 @Service
 public class SearchService {
-    public void searcher(String lang, String userQuery) throws IOException {
+    public void searcher(String userQuery, String lang) throws IOException {
         Analyzer analyzer = new StandardAnalyzer();
         Path path = Paths.get(System.getProperty("user.home"), "twitter-search/twitter-data", "StdIndex");
         if (lang == "en"){
@@ -83,7 +83,7 @@ public class SearchService {
                 System.out.println((rank + 1) + " (score:" + hits[rank].score + ") --> "
                         + hitDoc.get("user_name") + "/n"
                         + hitDoc.get("user_screen_name") + "/n");
-                // System.out.println(indexSearcher.explain(query, hits[rank].doc));
+                // ystem.out.println(indexSearcher.explain(query, hits[rank].doc));
             }
             indexReader.close();
             directory.close();
