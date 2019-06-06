@@ -15,17 +15,14 @@ public class SearchController {
     SearchService searchService;
 
     @GetMapping
-    public ResponseEntity hello() {
-        return ResponseEntity.ok(HttpStatus.OK);
+    public RestResponse hello() {
+        return new RestResponse(200, "OK", null);
     }
 
-    @CrossOrigin
     @PostMapping
     public ResponseEntity search(@RequestBody SearchObject data) {
         try {
-            String query = data.getQuery();
-            String lang = data.getLang();
-            searchService.searcher(query, lang);
+            searchService.searcher(data);
         } catch (IOException e) {
             return ResponseEntity.badRequest().body("Error: " + e.getMessage() + e.getStackTrace());
         }

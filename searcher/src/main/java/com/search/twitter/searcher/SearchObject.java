@@ -37,4 +37,11 @@ public class SearchObject {
     public void setLang(String value) {
         this.lang = value;
     }
+
+    public boolean isHashTag() {
+        if (this.query.startsWith("#")) {
+            return true;
+        }
+        return false;
+    }
 }

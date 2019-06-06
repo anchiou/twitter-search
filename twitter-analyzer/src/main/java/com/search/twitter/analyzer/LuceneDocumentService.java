@@ -154,7 +154,7 @@ public class LuceneDocumentService {
         doc.add(new TextField("user_name", userName, Field.Store.YES));
         String userScreenName = user.getString("screen_name");
         doc.add(new StringField("user_screen_name", userScreenName, Field.Store.YES));
-        String userVerified = Boolean.toString(user.getBoolean("verified"));//Semantically it should be a bool check "true"/"false"
+        String userVerified = Boolean.toString(user.getBoolean("verified")); //Semantically it should be a bool check "true"/"false"
         doc.add(new StringField("verified", userVerified, Field.Store.YES));
 
         //System.out.println("User Fields Done \n ... Returning...");

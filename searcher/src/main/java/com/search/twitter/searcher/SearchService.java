@@ -25,7 +25,10 @@ import java.util.Map;
 
 @Service
 public class SearchService {
-    public void searcher(String userQuery, String lang) throws IOException {
+    public void searcher(SearchObject searchObject) throws IOException {
+        String userQuery = searchObject.getQuery();
+        String lang = searchObject.getLang();
+
         Analyzer analyzer = new StandardAnalyzer();
         Path path = Paths.get(System.getProperty("user.home"), "twitter-search/twitter-data", "StdIndex");
         if (lang == "en"){
@@ -45,12 +48,16 @@ public class SearchService {
         Map<String, Float> boosts = new HashMap<>();
         boosts.put(fields[0], 1.7f); // text
         boosts.put(fields[1], 1.1f); // in_reply_to_screen_name
-        boosts.put(fields[2], 1.3f); // hashtags
+        if (searchObject.isHashTag()) { // hashtags
+            boosts.put(fields[2], 2.4f);
+        } else {
+            boosts.put(fields[2], 1.3f);
+        }
         boosts.put(fields[3], 1.2f); // mention_names
         boosts.put(fields[4], 1.2f); // mention_screen_names
         boosts.put(fields[5], 1.5f); // titles (of the urls)
-        boosts.put(fields[6], 1.7f); // user_name
-        boosts.put(fields[7], 1.75f); // user_screen_name
+        boosts.put(fields[6], 1.4f); // user_name
+        boosts.put(fields[7], 1.6f); // user_screen_name
 
         try {
             Expression expr = JavascriptCompiler.compile("_score + ln(retweet_count) + ln(favorite_count) ");
@@ -69,6 +76,9 @@ public class SearchService {
                     .add(boostedQuery, BooleanClause.Occur.MUST)
                     .add(new TermQuery(new Term("lang", lang)), BooleanClause.Occur.FILTER)
                     .build();
+            if (lang == "std") { // do not filter on language if std
+                filteredQuery = boostedQuery;
+            }
             FunctionScoreQuery functionQuery = new FunctionScoreQuery(filteredQuery, expr.getDoubleValuesSource(bindings));
             Query matchQuery = new TermQuery(new Term("verified", "true"));
             Query finalQuery = functionQuery.boostByQuery(functionQuery, matchQuery, 1.1f);
@@ -81,8 +91,11 @@ public class SearchService {
             for (int rank = 0; rank < hits.length; ++rank) {
                 Document hitDoc = indexSearcher.doc(hits[rank].doc);
                 System.out.println((rank + 1) + " (score:" + hits[rank].score + ") --> "
-                        + hitDoc.get("user_name") + "/n"
-                        + hitDoc.get("user_screen_name") + "/n");
+                        + hitDoc.get("user_name") + " @"
+                        + hitDoc.get("user_screen_name") + "\n"
+                        + hitDoc.get("text") + "\nhashtags: "
+                        + hitDoc.get("hashtags") + "\n favorite: "
+                        + hitDoc.get("favorite_count") + "\n");
                 // System.out.println(indexSearcher.explain(query, hits[rank].doc));
             }
             indexReader.close();
