@@ -1,5 +1,7 @@
 package com.search.twitter.searcher;
 
+import com.search.twitter.searcher.entity.SearchObject;
+import com.search.twitter.searcher.entity.TweetObject;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.cjk.CJKAnalyzer;
 import org.apache.lucene.analysis.en.EnglishAnalyzer;
@@ -20,14 +22,19 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service
 public class SearchService {
-    public void searcher(SearchObject searchObject) throws IOException {
+    public List<TweetObject> searcher(SearchObject searchObject) throws IOException {
         String userQuery = searchObject.getQuery();
         String lang = searchObject.getLang();
+        List<TweetObject> results = new ArrayList<>();
+
+        System.out.println("-----------------------" + userQuery + " " + searchObject.isHashTag());
 
         Analyzer analyzer = new StandardAnalyzer();
         Path path = Paths.get(System.getProperty("user.home"), "twitter-search/twitter-data", "StdIndex");
@@ -46,10 +53,10 @@ public class SearchService {
                 "mention_screen_names", "titles", "user_name", "user_screen_name"};
 
         Map<String, Float> boosts = new HashMap<>();
-        boosts.put(fields[0], 1.7f); // text
+        boosts.put(fields[0], 1.8f); // text
         boosts.put(fields[1], 1.1f); // in_reply_to_screen_name
         if (searchObject.isHashTag()) { // hashtags
-            boosts.put(fields[2], 2.4f);
+            boosts.put(fields[2], 2.6f);
         } else {
             boosts.put(fields[2], 1.3f);
         }
@@ -72,21 +79,27 @@ public class SearchService {
 
         // Queries are boosted, then filtered by language, then modified by expression
             Query boostedQuery = parser.parse(userQuery);
-            Query filteredQuery = new BooleanQuery.Builder()
-                    .add(boostedQuery, BooleanClause.Occur.MUST)
-                    .add(new TermQuery(new Term("lang", lang)), BooleanClause.Occur.FILTER)
-                    .build();
-            if (lang == "std") { // do not filter on language if std
+            Query filteredQuery;
+            if (lang != "std") { // filter on language if not std
+                filteredQuery = new BooleanQuery.Builder()
+                        .add(boostedQuery, BooleanClause.Occur.MUST)
+                        .add(new TermQuery(new Term("lang", lang)), BooleanClause.Occur.FILTER)
+                        .build();
+            } else {
                 filteredQuery = boostedQuery;
             }
             FunctionScoreQuery functionQuery = new FunctionScoreQuery(filteredQuery, expr.getDoubleValuesSource(bindings));
             Query matchQuery = new TermQuery(new Term("verified", "true"));
             Query finalQuery = functionQuery.boostByQuery(functionQuery, matchQuery, 1.1f);
-//            Query finalQuery = filteredQuery;
 //            System.out.println(finalQuery.toString());
 
             int numTopHits = 25;
             ScoreDoc[] hits = indexSearcher.search(finalQuery, numTopHits).scoreDocs;
+            int favCount = 0;
+            int retweetCount = 0;
+            int replyCount = 0;
+
+            System.out.println("-----------------------hit length "+ hits.length);
 
             for (int rank = 0; rank < hits.length; ++rank) {
                 Document hitDoc = indexSearcher.doc(hits[rank].doc);
@@ -96,6 +109,21 @@ public class SearchService {
                         + hitDoc.get("text") + "\nhashtags: "
                         + hitDoc.get("hashtags") + "\n favorite: "
                         + hitDoc.get("favorite_count") + "\n");
+
+                if (hitDoc.get("favorite_count") != null) {
+                    favCount = Integer.parseInt(hitDoc.get("favorite_count"));
+                }
+                if (hitDoc.get("retweet_count") != null) {
+                    retweetCount = Integer.parseInt(hitDoc.get("retweet_count"));
+                }
+                if (hitDoc.get("reply_count") != null) {
+                    replyCount = Integer.parseInt(hitDoc.get("reply_count"));
+                }
+
+                TweetObject tweet = new TweetObject(hitDoc.get("user_name"), hitDoc.get("user_screen_name"),
+                        hitDoc.get("text"), favCount, retweetCount, replyCount,
+                        Boolean.parseBoolean(hitDoc.get("verified")), hits[rank].score);
+                results.add(tweet);
                 // System.out.println(indexSearcher.explain(query, hits[rank].doc));
             }
             indexReader.close();
@@ -106,6 +134,8 @@ public class SearchService {
         catch (ParseException e) {
             System.out.println("SearchService.expr.compile: ParseException");
         }
+
+        return results;
     }
 }
 

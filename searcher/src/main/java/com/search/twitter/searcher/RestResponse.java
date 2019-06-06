@@ -3,9 +3,9 @@ package com.search.twitter.searcher;
 public class RestResponse {
     private int status; // HTTP response code
     private String message;
-    private String data;
+    private Object data;
 
-    public RestResponse(int status, String message, String data) {
+    public RestResponse(int status, String message, Object data) {
         this.status = status;
         this.message = message;
         this.data = data;
@@ -29,11 +29,11 @@ public class RestResponse {
         this.message = value;
     }
 
-    public String getData() {
+    public Object getData() {
         return data;
     }
 
-    public void setData(String value) {
+    public void setData(Object value) {
         this.data = value;
     }
 

@@ -1,4 +1,4 @@
-package com.search.twitter.searcher;
+package com.search.twitter.searcher.entity;
 
 public class SearchObject {
     // ------------------------
