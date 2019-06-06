@@ -27,26 +27,44 @@ public class LuceneDocumentService {
         doc.add(new StringField("in_reply_to_screen_name", inReplyToScreenName, Field.Store.YES));
 
         int replyCount = jsonObject.getInt("reply_count");
-        doc.add(new StringField("reply_count", Integer.toString(replyCount), Field.Store.YES));
-        //System.out.println("ret_cnt: " + replyCount.toString());
+//        doc.add(new StringField("reply_count", Integer.toString(replyCount), Field.Store.YES));
+//        System.out.println("ret_cnt: " + replyCount.toString());
 //        doc.add(new IntPoint("reply_count", replyCount));
 //        doc.add(new StoredField("reply_count", replyCount));
+        if (replyCount == 0){ //covers the log of 0 issue
+            doc.add( new NumericDocValuesField("reply_count", replyCount+1));
+        }
+        else{
+            doc.add( new NumericDocValuesField("reply_count", replyCount));
+        }
 
         int retweetCount = jsonObject.getInt("retweet_count");
-        doc.add(new StringField("retweet_count", Integer.toString(retweetCount), Field.Store.YES));
+//        doc.add(new StringField("retweet_count", Integer.toString(retweetCount), Field.Store.YES));
 //        //System.out.println("ret_cnt: " + retweetCount.toString());
 //        doc.add(new IntPoint("retweet_count", retweetCount));
 //        doc.add(new StoredField("retweet_count", retweetCount));
+        if (retweetCount == 0){ //covers the log of 0 issue
+            doc.add( new NumericDocValuesField("retweet_count", retweetCount+1));
+        }
+        else{
+            doc.add( new NumericDocValuesField("retweet_count", replyCount));
+        }
 
         int favoriteCount = jsonObject.getInt("favorite_count");
-        doc.add(new StringField("favorite_count", Integer.toString(favoriteCount), Field.Store.YES));
+//        doc.add(new StringField("favorite_count", Integer.toString(favoriteCount), Field.Store.YES));
 
 //        Integer favoriteCount = jsonObject.optInt("favorite_count", 0);
 //        //System.out.println("fav_cnt: " + favoriteCount.toString());
 //        doc.add(new IntPoint("favorite_count", favoriteCount));
 //        doc.add(new StoredField("favorite_count", favoriteCount));
+        if (favoriteCount == 0){ //covers the log of 0 issue
+            doc.add( new NumericDocValuesField("favorite_count", favoriteCount+1));
+        }
+        else{
+            doc.add( new NumericDocValuesField("favorite_count", favoriteCount));
+        }
 
-        String lang = jsonObject.optString("lang","en");
+        String lang = jsonObject.optString("lang","std");
         doc.add(new StringField("lang", lang, Field.Store.YES));
 
         //System.out.println("Outside Fields Done");
