@@ -59,11 +59,11 @@ public class TweetObject {
         this.username = value;
     }
 
-    public String getScreenName() {
+    public String getScreen_name() {
         return screen_name;
     }
 
-    public void setScreenName(String value) {
+    public void setScreen_name(String value) {
         this.screen_name = value;
     }
 
@@ -75,27 +75,27 @@ public class TweetObject {
         this.text = value;
     }
 
-    public int getFavoriteCount() {
+    public int getFavorite_count() {
         return favorite_count;
     }
 
-    public void setFavoriteCount(int value) {
+    public void setFavorite_count(int value) {
         this.favorite_count = value;
     }
 
-    public int getRetweetCount() {
+    public int getRetweet_count() {
         return retweet_count;
     }
 
-    public void setRetweetCount(int value) {
+    public void setRetweet_count(int value) {
         this.retweet_count = value;
     }
 
-    public int getReplyCount() {
+    public int getReply_count() {
         return reply_count;
     }
 
-    public void setReplyCount(int value) {
+    public void setReply_count(int value) {
         this.reply_count = value;
     }
 
