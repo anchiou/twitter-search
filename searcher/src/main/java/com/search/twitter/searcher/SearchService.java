@@ -64,7 +64,7 @@ public class SearchService {
         boosts.put(fields[4], 1.2f); // mention_screen_names
         boosts.put(fields[5], 1.5f); // titles (of the urls)
         boosts.put(fields[6], 1.4f); // user_name
-        boosts.put(fields[7], 1.6f); // user_screen_name
+        boosts.put(fields[7], 2.5f); // user_screen_name
 
         try {
             Expression expr = JavascriptCompiler.compile("_score + ln(retweet_count) + ln(favorite_count) ");
