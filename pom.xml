@@ -58,8 +58,13 @@
             <artifactId>lucene-queryparser</artifactId>
             <version>8.1.0</version>
         </dependency>
+        <dependency>
+            <groupId>org.apache.lucene</groupId>
+            <artifactId>lucene-expressions</artifactId>
+            <version>8.1.0</version>
+        </dependency>
         <!-- Lucene End -->
-</dependencies>
+    </dependencies>
 
     <build>
         <plugins>
